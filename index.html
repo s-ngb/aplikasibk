@@ -115,14 +115,10 @@
           <span class="hidden md:inline">Sinkron Cloud</span>
         </button>
 
-        <!-- Profil Foto Guru BK / Akses Cepat Pengaturan -->
-        <div class="relative group cursor-pointer" onclick="openConfigModal()" title="Pengaturan Cloud Spreadsheet">
-          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120" 
-               alt="Guru BK" 
-               class="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500 shadow-sm"
-               onerror="this.src='https://placehold.co/100x100/2563eb/ffffff?text=BK'">
-          <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white"></div>
-        </div>
+        <!-- Tombol Pengaturan Cloud Spreadsheet (Menggantikan Foto Profil) -->
+        <button onclick="openConfigModal()" class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl border border-slate-200 transition shadow-xs" title="Pengaturan Spreadsheet">
+          <i class="fa-solid fa-gear text-slate-600 text-base"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -358,6 +354,7 @@
               <option value="VII B">VII B</option>
               <option value="VII C">VII C</option>
               <option value="VII D">VII D</option>
+              <option value="VII E">VII E</option>
               <option value="VIII A">VIII A</option>
               <option value="VIII B">VIII B</option>
               <option value="VIII C">VIII C</option>
@@ -367,6 +364,7 @@
               <option value="IX B">IX B</option>
               <option value="IX C">IX C</option>
               <option value="IX D">IX D</option>
+              <option value="IX E">IX E</option>
             </select>
           </div>
 
@@ -450,6 +448,7 @@
           <option value="VII B">VII B</option>
           <option value="VII C">VII C</option>
           <option value="VII D">VII D</option>
+          <option value="VII E">VII E</option>
           <option value="VIII A">VIII A</option>
           <option value="VIII B">VIII B</option>
           <option value="VIII C">VIII C</option>
@@ -459,6 +458,7 @@
           <option value="IX B">IX B</option>
           <option value="IX C">IX C</option>
           <option value="IX D">IX D</option>
+          <option value="IX E">IX E</option>
         </select>
       </div>
 
@@ -467,8 +467,8 @@
           <table class="w-full text-left text-xs border-collapse">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider text-[11px]">
               <tr>
+                <th class="p-3.5">Foto & Siswa</th>
                 <th class="p-3.5">NISN / ID</th>
-                <th class="p-3.5">Nama Lengkap</th>
                 <th class="p-3.5">Kelas</th>
                 <th class="p-3.5">Jenis Kelamin</th>
                 <th class="p-3.5">No. HP Orang Tua</th>
@@ -1001,7 +1001,7 @@
 
   <!-- MODAL: TAMBAH SISWA -->
   <div id="modalTambahSiswa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <h3 class="font-bold text-slate-900 text-base">Tambah Siswa Baru</h3>
         <button onclick="closeModal('modalTambahSiswa')" class="text-slate-400 hover:text-slate-600">
@@ -1010,6 +1010,25 @@
       </div>
 
       <form onsubmit="simpanDataSiswaBaru(event)" class="mt-4 space-y-3 text-xs">
+        <!-- Area Upload Foto Siswa -->
+        <div class="flex flex-col items-center justify-center bg-slate-50 p-3.5 rounded-2xl border border-dashed border-slate-300">
+          <div class="relative w-20 h-20 rounded-2xl overflow-hidden bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center mb-2" id="previewFotoBox">
+            <i class="fa-regular fa-image text-2xl text-slate-400" id="previewFotoPlaceholder"></i>
+            <img id="previewFotoImg" src="" alt="Foto Siswa" class="w-full h-full object-cover hidden">
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="cursor-pointer px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold rounded-xl text-[11px] shadow-2xs flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-camera text-teal-600"></i>
+              <span>Pilih Foto Siswa</span>
+              <input type="file" id="siswaFotoInput" accept="image/*" class="hidden" onchange="handlePreviewFoto(event)">
+            </label>
+            <button type="button" id="btnHapusFoto" onclick="resetFotoPreview()" class="hidden px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-100 text-[11px] font-medium" title="Hapus Foto">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Format JPG, PNG (Otomatis dikompres & ringan)</p>
+        </div>
+
         <div>
           <label class="block font-semibold text-slate-700 mb-1">Nomor Induk Siswa (NISN/NIS)</label>
           <input type="text" id="siswaNISN" required placeholder="0078912345" class="w-full px-3 py-2 rounded-xl border border-slate-300">
@@ -1026,6 +1045,7 @@
               <option value="VII B">VII B</option>
               <option value="VII C">VII C</option>
               <option value="VII D">VII D</option>
+              <option value="VII E">VII E</option>
               <option value="VIII A">VIII A</option>
               <option value="VIII B">VIII B</option>
               <option value="VIII C">VIII C</option>
@@ -1035,6 +1055,7 @@
               <option value="IX B">IX B</option>
               <option value="IX C">IX C</option>
               <option value="IX D">IX D</option>
+              <option value="IX E">IX E</option>
             </select>
           </div>
           <div>
@@ -1055,7 +1076,7 @@
         </div>
         <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modalTambahSiswa')" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-xl">Simpan Siswa</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-xs">Simpan Siswa</button>
         </div>
       </form>
     </div>
@@ -1192,8 +1213,10 @@
     // Daftar Wali Kelas Berdasarkan Dokumen MTsN Landak
     const dataWaliKelasDefault = {
       'VII A': 'FAKHRUNNISA',
+      'VII B': 'Wali Kelas VII B',
       'VII C': 'GUSTI RIZAL WAHYUDI',
       'VII D': 'MUDYA AFRIANTY',
+      'VII E': 'Wali Kelas VII E',
       'VIII A': 'MELIANA',
       'VIII B': 'FENNY BUDIYANTI',
       'VIII C': 'NOVRI HARDI',
@@ -1202,7 +1225,8 @@
       'IX A': 'RINNI J. SIMANUNGKALIT',
       'IX B': 'MUTHI’AH MUTIARA RAHMANI',
       'IX C': 'URAY RASMI',
-      'IX D': 'MULYANTO'
+      'IX D': 'MULYANTO',
+      'IX E': 'Wali Kelas IX E'
     };
 
     /* 2. INISIALISASI SAAT HALAMAN DIBUKA */
@@ -1556,7 +1580,73 @@
     }
 
     function bukaModalTambahSiswa() {
+      resetFotoPreview();
       document.getElementById('modalTambahSiswa').classList.remove('hidden');
+    }
+
+    let tempFotoBase64 = '';
+
+    function handlePreviewFoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Kompres gambar dengan Canvas agar ringan (maksimal dimensi 200px)
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 200;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          tempFotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+          const previewImg = document.getElementById('previewFotoImg');
+          const placeholder = document.getElementById('previewFotoPlaceholder');
+          const btnHapus = document.getElementById('btnHapusFoto');
+
+          previewImg.src = tempFotoBase64;
+          previewImg.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+          btnHapus.classList.remove('hidden');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetFotoPreview() {
+      tempFotoBase64 = '';
+      const input = document.getElementById('siswaFotoInput');
+      if (input) input.value = '';
+      const previewImg = document.getElementById('previewFotoImg');
+      const placeholder = document.getElementById('previewFotoPlaceholder');
+      const btnHapus = document.getElementById('btnHapusFoto');
+
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.classList.add('hidden');
+      }
+      if (placeholder) placeholder.classList.remove('hidden');
+      if (btnHapus) btnHapus.classList.add('hidden');
     }
 
     function simpanDataSiswaBaru(e) {
@@ -1570,6 +1660,7 @@
 
       const newSiswa = {
         id: Date.now(),
+        foto: tempFotoBase64 || '',
         nisn,
         nama,
         kelas,
@@ -1590,6 +1681,7 @@
       document.getElementById('siswaNama').value = '';
       document.getElementById('siswaWaliKelas').value = '';
       document.getElementById('siswaHpOrtu').value = '';
+      resetFotoPreview();
 
       if (database.settings.appScriptUrl) syncWithGoogleSheet(true);
     }
@@ -1614,9 +1706,22 @@
       filtered.forEach(s => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-50 transition-colors';
+
+        const fotoEl = s.foto
+          ? `<img src="${s.foto}" alt="${s.nama}" class="w-9 h-9 rounded-xl object-cover border border-slate-200 shrink-0">`
+          : `<div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-xs shrink-0">${s.nama.charAt(0).toUpperCase()}</div>`;
+
         tr.innerHTML = `
+          <td class="p-3.5">
+            <div class="flex items-center gap-3">
+              ${fotoEl}
+              <div>
+                <span class="font-bold text-slate-900 block">${s.nama}</span>
+                <span class="text-[11px] text-slate-400">${s.waliKelas ? 'Wali: ' + s.waliKelas : ''}</span>
+              </div>
+            </div>
+          </td>
           <td class="p-3.5 font-mono text-slate-500">${s.nisn}</td>
-          <td class="p-3.5 font-bold text-slate-900">${s.nama}</td>
           <td class="p-3.5"><span class="px-2 py-0.5 rounded-md bg-slate-100 font-semibold">${s.kelas}</span></td>
           <td class="p-3.5">${s.jk === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
           <td class="p-3.5">
