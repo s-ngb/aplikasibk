@@ -95,13 +95,15 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Periode Aktif Pill -->
-        <div class="hidden sm:flex flex-col items-end">
-          <span class="text-[11px] text-slate-500 font-medium">Periode Aktif</span>
-          <span class="bg-blue-600 text-white font-semibold text-xs px-3 py-1 rounded-full shadow-sm">
+        <!-- Periode Aktif Pill (Bisa diklik untuk ganti) -->
+        <button onclick="openModalPeriode()" class="hidden sm:flex flex-col items-end text-left group" title="Klik untuk ganti Tahun Ajaran & Semester">
+          <span class="text-[11px] text-slate-500 font-medium group-hover:text-blue-600 transition flex items-center gap-1">
+            Periode Aktif <i class="fa-solid fa-chevron-down text-[9px]"></i>
+          </span>
+          <span id="badgePeriodeAktifDesktop" class="bg-blue-600 group-hover:bg-blue-700 text-white font-semibold text-xs px-3 py-1 rounded-full shadow-sm transition">
             2026/2027 Ganjil
           </span>
-        </div>
+        </button>
 
         <!-- Tombol Edit Pejabat & TTD -->
         <button onclick="openModalPejabat()" class="hidden md:flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-2 rounded-xl border border-slate-200 transition shadow-xs" title="Edit Pejabat & Format Kop Surat">
@@ -128,9 +130,10 @@
     <button onclick="openModalPejabat()" class="text-xs text-teal-700 font-semibold flex items-center gap-1">
       <i class="fa-solid fa-file-signature"></i> Atur TTD / Pejabat
     </button>
-    <span class="bg-blue-600 text-white font-bold text-xs px-3 py-0.5 rounded-full shadow-xs">
-      2026/2027 Ganjil
-    </span>
+    <button onclick="openModalPeriode()" class="bg-blue-600 text-white font-bold text-xs px-3 py-0.5 rounded-full shadow-xs flex items-center gap-1">
+      <span id="badgePeriodeAktifMobile">2026/2027 Ganjil</span>
+      <i class="fa-solid fa-pen text-[9px]"></i>
+    </button>
   </div>
 
   <!-- NAVIGATION SIDEBAR / DRAWER -->
@@ -177,7 +180,10 @@
 
       <div class="pt-4 mt-4 border-t border-slate-100">
         <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3.5">Pengaturan & Sinkron</span>
-        <a href="javascript:void(0)" onclick="openModalPejabat()" class="flex items-center gap-3 px-3.5 py-2.5 mt-1 rounded-xl text-slate-600 hover:bg-slate-100">
+        <a href="javascript:void(0)" onclick="openModalPeriode()" class="flex items-center gap-3 px-3.5 py-2.5 mt-1 rounded-xl text-slate-600 hover:bg-slate-100">
+          <i class="fa-solid fa-calendar-days w-5 text-blue-600"></i> Setel Tahun Ajaran & Semester
+        </a>
+        <a href="javascript:void(0)" onclick="openModalPejabat()" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100">
           <i class="fa-solid fa-signature w-5 text-teal-600"></i> Setup Kepala, BK & Wali Kelas
         </a>
         <a href="javascript:void(0)" onclick="openConfigModal()" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100">
@@ -706,6 +712,67 @@
 
 
   <!-- ======================================================== -->
+  <!-- MODAL: PILIH TAHUN AJARAN & SEMESTER (MULAI 2026/2027)  -->
+  <!-- ======================================================== -->
+  <div id="modalPeriode" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-calendar-days"></i>
+          </div>
+          <h3 class="font-bold text-slate-900 text-base">Atur Periode Aktif</h3>
+        </div>
+        <button onclick="closeModal('modalPeriode')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="simpanPeriodeAktif(event)" class="mt-4 space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1.5">Tahun Ajaran</label>
+          <select id="pilihTahunAjaran" onchange="toggleCustomTahunInput()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs bg-white font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500">
+            <option value="2026/2027">2026/2027</option>
+            <option value="2027/2028">2027/2028</option>
+            <option value="2028/2029">2028/2029</option>
+            <option value="2029/2030">2029/2030</option>
+            <option value="2030/2031">2030/2031</option>
+            <option value="2031/2032">2031/2032</option>
+            <option value="custom">+ Masukkan Tahun Lain...</option>
+          </select>
+        </div>
+
+        <div id="customTahunWrap" class="hidden">
+          <label class="block font-semibold text-slate-700 mb-1">Tulis Tahun Ajaran Baru</label>
+          <input type="text" id="customTahunInput" placeholder="Contoh: 2032/2033" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1.5">Semester</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center justify-center gap-2 p-2.5 border rounded-xl cursor-pointer hover:bg-slate-50 font-semibold has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:text-blue-700">
+              <input type="radio" name="optSemester" value="Ganjil" checked class="text-blue-600">
+              <span>Ganjil</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 border rounded-xl cursor-pointer hover:bg-slate-50 font-semibold has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:text-blue-700">
+              <input type="radio" name="optSemester" value="Genap" class="text-blue-600">
+              <span>Genap</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modalPeriode')" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-xl">Batal</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm">
+            Terapkan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ======================================================== -->
   <!-- MODAL: PREVIEW SURAT PANGGILAN OTENTIK (PERSIS DOKUMEN) -->
   <!-- ======================================================== -->
   <div id="modalSuratPreview" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
@@ -967,6 +1034,66 @@
   </div>
 
 
+  <!-- MODAL: PILIH TAHUN AJARAN & SEMESTER -->
+  <div id="modalPeriode" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-calendar-days"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-sm">Pilih Periode Aktif</h3>
+            <p class="text-[11px] text-slate-400">Tahun Ajaran & Semester Madrasah</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modalPeriode')" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form onsubmit="simpanPeriodeAktif(event)" class="mt-4 space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Tahun Ajaran</label>
+          <select id="pilihTahunAjaran" onchange="toggleCustomTahun()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs bg-white font-semibold focus:ring-2 focus:ring-blue-500">
+            <option value="2024/2025">2024/2025</option>
+            <option value="2025/2026">2025/2026</option>
+            <option value="2026/2027">2026/2027</option>
+            <option value="2027/2028">2027/2028</option>
+            <option value="custom">+ Input Manual / Tahun Lain</option>
+          </select>
+          <input type="text" id="inputCustomTahun" placeholder="Contoh: 2028/2029" class="w-full px-3 py-2 mt-2 rounded-xl border border-slate-300 text-xs hidden">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Semester</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center justify-center gap-2 p-2.5 border rounded-xl cursor-pointer hover:bg-slate-50 font-semibold text-xs has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:text-blue-700">
+              <input type="radio" name="optSemester" value="Ganjil" checked class="hidden">
+              <i class="fa-solid fa-sun text-amber-500"></i> Ganjil
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 border rounded-xl cursor-pointer hover:bg-slate-50 font-semibold text-xs has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:text-blue-700">
+              <input type="radio" name="optSemester" value="Genap" class="hidden">
+              <i class="fa-solid fa-moon text-indigo-500"></i> Genap
+            </label>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-500 text-[11px] leading-relaxed">
+          <i class="fa-solid fa-circle-info text-blue-600 mr-1"></i> Periode aktif akan ditampilkan di header aplikasi dan disinkronkan saat membuat laporan.
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-100">
+          <button type="button" onclick="closeModal('modalPeriode')" class="px-4 py-2 border border-slate-200 text-slate-600 font-semibold rounded-xl">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm">
+            Terapkan Periode
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
   <!-- MODAL: GOOGLE SPREADSHEET CONFIG -->
   <div id="modalConfig" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
@@ -1194,6 +1321,10 @@
       absensi: JSON.parse(localStorage.getItem('bk_absensi')) || [],
       kunjungan: JSON.parse(localStorage.getItem('bk_kunjungan')) || [],
       suratCounter: parseInt(localStorage.getItem('bk_surat_counter')) || 85,
+      periode: JSON.parse(localStorage.getItem('bk_periode')) || {
+        tahun: '2026/2027',
+        semester: 'Ganjil'
+      },
       pejabat: JSON.parse(localStorage.getItem('bk_pejabat')) || {
         namaMadrasah: 'MADRASAH TSANAWIYAH NEGERI LANDAK',
         kemenagKab: 'KANTOR KEMENTERIAN AGAMA KABUPATEN LANDAK',
@@ -1237,6 +1368,7 @@
         if (el) el.value = today;
       });
 
+      terapkanPeriodeKeUI();
       terapkanDataPejabatKeUI();
       populateDropdownSiswa();
       generateNomorSuratOtomatis();
@@ -1260,10 +1392,95 @@
       localStorage.setItem('bk_kasus', JSON.stringify(database.kasus));
       localStorage.setItem('bk_absensi', JSON.stringify(database.absensi));
       localStorage.setItem('bk_kunjungan', JSON.stringify(database.kunjungan));
+      localStorage.setItem('bk_periode', JSON.stringify(database.periode));
       localStorage.setItem('bk_pejabat', JSON.stringify(database.pejabat));
       localStorage.setItem('bk_settings', JSON.stringify(database.settings));
       localStorage.setItem('bk_surat_counter', database.suratCounter.toString());
       renderStats();
+    }
+
+    /* LOGIKA PERIODE AKTIF (TAHUN AJARAN MULAI 2026/2027 & SETERUSNYA) */
+    function terapkanPeriodeKeUI() {
+      const per = database.periode || { tahun: '2026/2027', semester: 'Ganjil' };
+      const teks = `${per.tahun} ${per.semester}`;
+      
+      const elDesktop = document.getElementById('badgePeriodeAktifDesktop');
+      const elMobile = document.getElementById('badgePeriodeAktifMobile');
+      if (elDesktop) elDesktop.innerText = teks;
+      if (elMobile) elMobile.innerText = teks;
+    }
+
+    function openModalPeriode() {
+      const per = database.periode || { tahun: '2026/2027', semester: 'Ganjil' };
+      const select = document.getElementById('pilihTahunAjaran');
+      const wrapCustom = document.getElementById('customTahunWrap');
+      const customInput = document.getElementById('customTahunInput');
+
+      let found = false;
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === per.tahun) {
+          select.selectedIndex = i;
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        select.value = 'custom';
+        wrapCustom.classList.remove('hidden');
+        customInput.value = per.tahun;
+      } else {
+        wrapCustom.classList.add('hidden');
+        customInput.value = '';
+      }
+
+      // Set radio semester
+      const radios = document.getElementsByName('optSemester');
+      radios.forEach(r => {
+        r.checked = (r.value === per.semester);
+      });
+
+      document.getElementById('modalPeriode').classList.remove('hidden');
+    }
+
+    function toggleCustomTahunInput() {
+      const val = document.getElementById('pilihTahunAjaran').value;
+      const wrap = document.getElementById('customTahunWrap');
+      if (val === 'custom') {
+        wrap.classList.remove('hidden');
+        document.getElementById('customTahunInput').focus();
+      } else {
+        wrap.classList.add('hidden');
+      }
+    }
+
+    function simpanPeriodeAktif(e) {
+      e.preventDefault();
+      const valTahun = document.getElementById('pilihTahunAjaran').value;
+      let finalTahun = valTahun;
+      if (valTahun === 'custom') {
+        finalTahun = document.getElementById('customTahunInput').value.trim() || '2026/2027';
+      }
+
+      let selectedSemester = 'Ganjil';
+      const radios = document.getElementsByName('optSemester');
+      for (const r of radios) {
+        if (r.checked) {
+          selectedSemester = r.value;
+          break;
+        }
+      }
+
+      database.periode = {
+        tahun: finalTahun,
+        semester: selectedSemester
+      };
+
+      saveToStorage();
+      terapkanPeriodeKeUI();
+      closeModal('modalPeriode');
+      showToast(`Periode aktif diubah ke ${finalTahun} ${selectedSemester}`);
+      if (database.settings.appScriptUrl) syncWithGoogleSheet(true);
     }
 
     function showToast(pesan, sukses = true) {
