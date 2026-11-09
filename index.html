@@ -53,23 +53,35 @@
       scrollbar-width: none;
     }
     @media print {
+      @page {
+        size: A4 portrait;
+        margin: 12mm 15mm 10mm 15mm;
+      }
       .no-print { display: none !important; }
       .print-only { display: block !important; }
-      body { background: #fff !important; padding: 0 !important; }
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
       #modalSuratPreview {
         position: static !important;
         background: transparent !important;
         padding: 0 !important;
         display: block !important;
+        inset: auto !important;
+        overflow: visible !important;
       }
       #modalSuratPreview > div {
         max-width: 100% !important;
         box-shadow: none !important;
         padding: 0 !important;
         border: none !important;
+        border-radius: 0 !important;
       }
       #areaCetakSurat {
         padding: 0 !important;
+        page-break-inside: avoid !important;
       }
     }
   </style>
@@ -797,71 +809,132 @@
       <!-- AREA CETAK SURAT RESMI (OTENTIK SESUAI FILE MTsN LANDAK) -->
       <div id="areaCetakSurat" class="bg-white text-slate-900 font-serif leading-relaxed text-[13px] sm:text-[14px]">
         
-        <!-- KOP SURAT BERLOGO GANDA -->
-        <div class="flex items-center justify-between border-b-[3px] border-black pb-2 mb-4">
-          <!-- Logo 1: Kemenag Ikhlas Beramal -->
+        <!-- KOP SURAT BERLOGO RESMI MTsN LANDAK & KEMENAG -->
+        <div class="relative flex items-center justify-between pb-2 mb-3">
+          <!-- Logo 1: Kemenag Ikhlas Beramal (Vektor HD Mandiri) -->
           <div class="w-20 h-20 shrink-0 flex items-center justify-center">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Kementerian_Agama_Republik_Indonesia.png/640px-Logo_Kementerian_Agama_Republik_Indonesia.png" 
-                 alt="Logo Kemenag" class="w-16 h-16 object-contain"
-                 onerror="this.src='https://placehold.co/80x80?text=KEMENAG'">
+            <svg class="w-18 h-18" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outline Segilima Kemenag -->
+              <polygon points="100,5 195,78 158,198 42,198 5,78" fill="#eab308" stroke="#ca8a04" stroke-width="3"/>
+              <polygon points="100,12 187,79 153,190 47,190 13,79" fill="#15803d"/>
+              <polygon points="100,20 180,81 148,184 52,184 20,81" fill="#166534"/>
+              <!-- Bintang Kuning Emas -->
+              <polygon points="100,32 104,44 116,44 107,51 110,63 100,56 90,63 93,51 84,44 96,44" fill="#facc15"/>
+              <!-- Padi & Kapas Bulat -->
+              <circle cx="82" cy="70" r="3.5" fill="#f8fafc"/>
+              <circle cx="76" cy="82" r="3.5" fill="#f8fafc"/>
+              <circle cx="72" cy="95" r="3.5" fill="#f8fafc"/>
+              <circle cx="70" cy="110" r="3.5" fill="#f8fafc"/>
+              <circle cx="72" cy="125" r="3.5" fill="#f8fafc"/>
+              <circle cx="76" cy="138" r="3.5" fill="#f8fafc"/>
+              <ellipse cx="118" cy="72" rx="3.5" ry="5.5" fill="#facc15" transform="rotate(25 118 72)"/>
+              <ellipse cx="124" cy="85" rx="3.5" ry="5.5" fill="#facc15" transform="rotate(20 124 85)"/>
+              <ellipse cx="128" cy="100" rx="3.5" ry="5.5" fill="#facc15" transform="rotate(10 128 100)"/>
+              <ellipse cx="129" cy="115" rx="3.5" ry="5.5" fill="#facc15"/>
+              <ellipse cx="126" cy="130" rx="3.5" ry="5.5" fill="#facc15" transform="rotate(-15 126 130)"/>
+              <ellipse cx="120" cy="142" rx="3.5" ry="5.5" fill="#facc15" transform="rotate(-25 120 142)"/>
+              <!-- Kitab Suci Al-Qur'an Terbuka -->
+              <path d="M72 108 C84 100 96 104 100 110 C104 104 116 100 128 108 L126 128 C114 122 104 124 100 129 C96 124 86 122 74 128 Z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.8"/>
+              <line x1="100" y1="110" x2="100" y2="129" stroke="#854d0e" stroke-width="1.5"/>
+              <!-- Alas / Rehal Kitab Hitam & Putih -->
+              <path d="M78 128 L122 148 M122 128 L78 148" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+              <path d="M78 128 L122 148 M122 128 L78 148" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+              <!-- Pita Putih Ikhlas Beramal -->
+              <path d="M52 162 Q100 148 148 162 L152 174 Q100 158 48 174 Z" fill="#ffffff" stroke="#334155" stroke-width="1"/>
+              <text x="100" y="166" font-family="'Inter', sans-serif" font-size="7.5" font-weight="900" fill="#0f172a" text-anchor="middle" letter-spacing="0.5">IKHLAS BERAMAL</text>
+            </svg>
           </div>
-          <!-- Teks Kop -->
-          <div class="text-center flex-1 px-2 font-serif">
-            <p class="font-bold text-sm sm:text-base tracking-wider uppercase" id="cetakKopBaris1">KEMENTERIAN AGAMA REPUBLIK INDONESIA</p>
-            <p class="font-bold text-xs sm:text-sm tracking-wider uppercase" id="cetakKopBaris2">KANTOR KEMENTERIAN AGAMA KABUPATEN LANDAK</p>
-            <p class="font-extrabold text-base sm:text-lg tracking-wider uppercase text-black" id="cetakKopMadrasah">MADRASAH TSANAWIYAH NEGERI LANDAK</p>
+
+          <!-- Teks Kop Surat -->
+          <div class="text-center flex-1 px-1 font-serif text-slate-900">
+            <p class="font-bold text-[13px] sm:text-[14px] tracking-wider uppercase leading-tight" id="cetakKopBaris1">KEMENTERIAN AGAMA REPUBLIK INDONESIA</p>
+            <p class="font-bold text-[12px] sm:text-[13px] tracking-wider uppercase leading-tight" id="cetakKopBaris2">KANTOR KEMENTERIAN AGAMA KABUPATEN LANDAK</p>
+            <p class="font-extrabold text-[15px] sm:text-[17px] tracking-wider uppercase text-black my-0.5 leading-snug" id="cetakKopMadrasah">MADRASAH TSANAWIYAH NEGERI LANDAK</p>
             <p class="text-[10px] sm:text-[11px] leading-tight" id="cetakKopAlamat">Jalan Pangeran Sanca Natakusuma No.22 Kecamatan Ngabang</p>
             <p class="text-[10px] sm:text-[11px] leading-tight" id="cetakKopKontak">Telepon (0811575303); https://mtsnlandak.sch.id/</p>
           </div>
-          <!-- Logo 2: Logo Madrasah -->
+
+          <!-- Logo 2: Logo MTsN Landak (Vektor Bintang 8 Hijau & Kubah Masjid) -->
           <div class="w-20 h-20 shrink-0 flex items-center justify-center">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhWw3s1y8VvX3m8C3s4z2K7Z6hL5pX8kQ9y9w0/s1600/logo-mtsn-landak.png" 
-                 alt="Logo MTsN Landak" class="w-16 h-16 object-contain"
-                 onerror="this.src='https://placehold.co/80x80/0d9488/ffffff?text=MTsN'">
+            <svg class="w-18 h-18" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Bintang Segi Delapan Hijau Madrasah Luar -->
+              <rect x="35" y="35" width="130" height="130" rx="12" fill="#84cc16" stroke="#4d7c0f" stroke-width="3"/>
+              <rect x="35" y="35" width="130" height="130" rx="12" fill="#84cc16" stroke="#4d7c0f" stroke-width="3" transform="rotate(45 100 100)"/>
+              <!-- Bintang Segi Delapan Teal Dalam -->
+              <rect x="42" y="42" width="116" height="116" rx="8" fill="#ffffff"/>
+              <rect x="42" y="42" width="116" height="116" rx="8" fill="#ffffff" transform="rotate(45 100 100)"/>
+              <rect x="46" y="46" width="108" height="108" rx="6" fill="#0f766e"/>
+              <rect x="46" y="46" width="108" height="108" rx="6" fill="#0f766e" transform="rotate(45 100 100)"/>
+              <!-- Area Tengah Putih -->
+              <circle cx="100" cy="100" r="50" fill="#ffffff"/>
+              <!-- Kubah Masjid & Bulan Bintang Hijau -->
+              <circle cx="100" cy="48" r="2.5" fill="#15803d"/>
+              <path d="M96 52 Q100 49 104 52 Q100 56 96 52 Z" fill="#15803d"/>
+              <path d="M84 72 Q100 54 116 72 Q100 75 84 72 Z" fill="#059669"/>
+              <path d="M82 76 Q100 68 118 76" stroke="#eab308" stroke-width="2" fill="none"/>
+              <!-- Siswa Belajar Berdua (Pink & Orange) -->
+              <circle cx="89" cy="85" r="7" fill="#db2777"/>
+              <path d="M82 98 Q89 89 97 97 Q88 106 82 98 Z" fill="#ec4899"/>
+              <circle cx="111" cy="84" r="7" fill="#ea580c"/>
+              <path d="M103 97 Q111 88 118 97 Q112 106 103 97 Z" fill="#f97316"/>
+              <!-- Buku Terbuka Biru & Emas -->
+              <path d="M68 116 Q100 105 132 116 L130 128 Q100 119 70 128 Z" fill="#0284c7"/>
+              <path d="M72 112 Q100 103 128 112 L126 122 Q100 114 74 122 Z" fill="#f59e0b"/>
+              <!-- Berlian / Prestasi di Tengah Bawah -->
+              <polygon points="100,118 106,124 100,131 94,124" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8"/>
+              <!-- Banner Hitam Teks MTs N LANDAK -->
+              <rect x="48" y="132" width="104" height="15" rx="3" fill="#ffffff" stroke="#047857" stroke-width="1.2"/>
+              <text x="100" y="143" font-family="'Times New Roman', serif" font-size="8.5" font-weight="900" fill="#000000" text-anchor="middle" letter-spacing="0.5">MTs N LANDAK</text>
+            </svg>
           </div>
         </div>
 
+        <!-- GARIS PEMBATAS RESMI KOP DINAS (DUA GARIS: TEBAL & TIPIS) -->
+        <div class="mb-4">
+          <div class="border-b-[2.5px] border-black"></div>
+          <div class="border-b-[0.8px] border-black mt-[1.5px]"></div>
+        </div>
+
         <!-- NOMOR SURAT, LAMPIRAN & PERIHAL -->
-        <div class="flex justify-between items-start mb-4 text-xs sm:text-sm">
-          <table class="text-left font-serif">
+        <div class="flex justify-between items-start mb-3 text-xs sm:text-sm">
+          <table class="text-left font-serif leading-tight">
             <tr>
-              <td class="w-20">Nomor</td>
-              <td class="w-3">:</td>
-              <td class="font-bold font-mono" id="cetakNomorSurat">B-85/Mts.14.12/PP.00.5/11/2026</td>
+              <td class="w-20 py-0.5">Nomor</td>
+              <td class="w-3 py-0.5">:</td>
+              <td class="font-bold font-mono py-0.5" id="cetakNomorSurat">B-85/Mts.14.12/PP.00.5/11/2026</td>
             </tr>
             <tr>
-              <td>Lampiran</td>
-              <td>:</td>
-              <td id="cetakLampiranSurat">-</td>
+              <td class="py-0.5">Lampiran</td>
+              <td class="py-0.5">:</td>
+              <td class="py-0.5" id="cetakLampiranSurat">-</td>
             </tr>
             <tr>
-              <td>Hal</td>
-              <td>:</td>
-              <td class="font-bold">Panggilan Orang Tua</td>
+              <td class="py-0.5">Hal</td>
+              <td class="py-0.5">:</td>
+              <td class="font-bold py-0.5">Panggilan Orang Tua</td>
             </tr>
           </table>
         </div>
 
         <!-- KEPADA YTH -->
-        <div class="mb-4">
-          <p>Kepada Yth,</p>
-          <div class="ml-8">
+        <div class="mb-3">
+          <p class="leading-tight">Kepada Yth,</p>
+          <div class="ml-8 leading-tight">
             <p>Bapak/Ibu Orang Tua Murid</p>
-            <p class="font-bold uppercase tracking-wide text-black text-sm sm:text-base" id="cetakNamaMurid">ARJUN BIMANTARA</p>
+            <p class="font-bold uppercase tracking-wide text-black text-sm sm:text-base mt-0.5" id="cetakNamaMurid">ARJUN BIMANTARA</p>
           </div>
-          <p>Di –</p>
-          <p class="ml-12">Tempat</p>
+          <p class="leading-tight">Di –</p>
+          <p class="ml-12 leading-tight">Tempat</p>
         </div>
 
         <!-- SALAM & ISI SURAT -->
-        <p class="mb-2">Assalamu’alaikum Warohmatullahi Wabarokatuh</p>
+        <p class="mb-1.5">Assalamu’alaikum Warohmatullahi Wabarokatuh</p>
         <p class="text-justify mb-2 leading-relaxed">
-          Puji syukur kita haturkan kepada Allah Subhanahu Wata’ala yang telah melimpahkan Rahmat, inayah dan hidayah-Nya kepada kita. <span id="cetakRedaksiAlasan">Karena ada permasalahan yang perlu dikomunikasikan berhubungan dengan siswa di sekolah.</span>
+          Puji syukur kita haturkan kepada Allah Subhanahu Wata’ala yang telah melimpahkan Rahmat, inayah dan hidayah-Nya kepada kita. <span id="cetakRedaksiAlasan">Karena ada permasalahan yang berhubungan dengan siswa di sekolah,</span> kami mengharapkan Bapak/Ibu orang tua dari siswa/siswi hadir pada:
         </p>
-        <p class="mb-3">Kami mengharapkan Bapak/Ibu orang tua dari siswa/siswi hadir pada:</p>
 
         <!-- JADWAL KEHADIRAN -->
-        <table class="ml-8 mb-4 text-xs sm:text-sm font-serif">
+        <table class="ml-8 mb-3 text-xs sm:text-sm font-serif">
           <tr>
             <td class="w-32 py-0.5">Hari/ Tanggal</td>
             <td class="w-3 py-0.5">:</td>
@@ -879,13 +952,13 @@
           </tr>
         </table>
 
-        <p class="text-justify mb-3">
+        <p class="text-justify mb-2">
           Demikianlah surat panggilan ini disampaikan, atas perhatian dan kehadirannya diucapkan terima kasih.
         </p>
-        <p class="mb-6">Wassalamu’alaikum Warohmatullahi Wabarokatuh</p>
+        <p class="mb-4">Wassalamu’alaikum Warohmatullahi Wabarokatuh</p>
 
         <!-- TANDA TANGAN (KIRI & KANAN) -->
-        <div class="grid grid-cols-2 text-center text-xs sm:text-sm font-serif mb-8">
+        <div class="grid grid-cols-2 text-center text-xs sm:text-sm font-serif mb-6">
           <!-- Kolom Kiri -->
           <div>
             <p id="cetakTtdKiriJabatan">Mengetahui,<br>Kepala Madrasah,</p>
@@ -909,8 +982,8 @@
         <!-- ======================================================== -->
         <!-- POTONGAN LEMBAR BUKTI PENGEMBALIAN KE MADRASAH           -->
         <!-- ======================================================== -->
-        <div class="border-t-2 border-dashed border-slate-600 pt-3 mt-6">
-          <p class="text-center font-sans text-[11px] italic mb-3 tracking-wider text-slate-700">
+        <div class="border-t-2 border-dashed border-slate-700 pt-2.5 mt-4">
+          <p class="text-center font-sans text-[10px] sm:text-[11px] italic mb-2 tracking-wider text-slate-700">
             ---------------------------------------- Potong disini dikembalikan ke MTsN Landak ----------------------------------------
           </p>
 
@@ -934,7 +1007,7 @@
 
             <div class="text-center font-serif pr-4">
               <p>Penerima<br>Orang Tua,</p>
-              <div class="h-12"></div>
+              <div class="h-10"></div>
               <p>(......................................)</p>
             </div>
           </div>
